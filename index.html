@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎸 Guitar Practice PWA</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="manifest" href="manifest.json">
+<script src="https://unpkg.com/wavesurfer.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vexflow/releases/vexflow-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="container">
+  <h1>🎸 Guitar Practice App</h1>
+
+  <div class="controls">
+    <button id="recordBtn">録音開始</button>
+    <button id="stopBtn">録音停止</button>
+    <button id="playBtn">再生</button>
+    <button id="slowBtn">スロー再生</button>
+    <button id="earBtn">耳コピ解析</button>
+    <button id="rhythmBtn">リズム解析</button>
+    <button id="scoreBtn">楽譜表示</button>
+    <button id="helpBtn">操作方法</button>
+    <input type="file" id="audioFile" accept="audio/*" style="margin-top:10px;">
+  </div>
+
+  <div id="waveform"></div>
+
+  <div id="analysis">
+    <h2>解析結果</h2>
+    <pre id="result">ここに表示されます</pre>
+  </div>
+
+  <div id="score"></div>
+
+  <div id="logChartContainer">
+    <canvas id="logChart"></canvas>
+  </div>
+</div>
+
+<!-- モーダル -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>操作方法</h2>
+    <ul>
+      <li>録音開始: ギターを録音します</li>
+      <li>録音停止: 録音を終了します</li>
+      <li>再生: 録音した音を再生します</li>
+      <li>スロー再生: 0.5倍速で再生します</li>
+      <li>耳コピ解析: 推定コードを表示します</li>
+      <li>リズム解析: BPMを表示します</li>
+      <li>楽譜表示: 録音音源の簡易譜面を表示します</li>
+      <li>音源ファイル: ローカル音声ファイルをアップロードして解析できます</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
