@@ -254,6 +254,7 @@ let isLoop = false;
 let logData = [];
 let myChart = null;
 
+
 /* helpers */
 function byId(id){ return document.getElementById(id); }
 function showResult(text){ byId('result').textContent = text; }
@@ -385,11 +386,28 @@ byId('stopBtn').addEventListener('click', ()=>{
   }
 });
 
+let pausedPosition = 0;
+/* ---------------------------
+   停止
+--------------------------- */
+document.getElementById("stopPlaybackBtn").onclick = () => {
+  if (!wavesurfer) return;
+
+  wavesurfer.pause();
+  pausedPosition = wavesurfer.getCurrentTime();  // 再生位置を保存
+};
+
+
 /* playback controls */
-byId('playBtn').addEventListener('click', ()=> {
-  if(!wavesurfer){ showResult('音声を読み込んでください'); return; }
+document.getElementById("playBtn").onclick = () => {
+  if (!wavesurfer) return;
+
+  if (pausedPosition > 0) {
+    wavesurfer.setPlaybackRate(1.0); // 通常速度に戻す（好み）
+    wavesurfer.seekTo(pausedPosition / wavesurfer.getDuration());  
+  }
   wavesurfer.play();
-});
+};
 byId('slowBtn').addEventListener('click', ()=> {
   if(!wavesurfer){ showResult('音声を読み込んでください'); return; }
   wavesurfer.setPlaybackRate(0.5);
