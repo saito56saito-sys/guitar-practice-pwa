@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -12,8 +12,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="app.js" defer></script>
 </head>
-<body>
-<div class="container">
+<body> -->
+<!-- <div class="container">
   <h1>🎸 Guitar Practice App</h1>
 
   <div class="controls">
@@ -25,11 +25,11 @@
     <button id="rhythmBtn">リズム解析</button>
     <button id="scoreBtn">楽譜表示</button>
     <button id="helpBtn">操作方法</button>
-    <!-- <input type="file" id="audioFile" accept="audio/*" style="margin-top:10px;"> -->
-    <input type="file" id="fileInput" accept="audio/*" style="margin-top:10px;">
-  </div>
+    <input type="file" id="audioFile" accept="audio/*" style="margin-top:10px;"> -->
+    <!-- <input type="file" id="fileInput" accept="audio/*" style="margin-top:10px;">
+  </div> --> 
 
-  <div id="waveform"></div>
+  <!-- <div id="waveform"></div>
 
   <div id="analysis">
     <h2>解析結果</h2>
@@ -41,9 +41,9 @@
   <div id="logChartContainer">
     <canvas id="logChart"></canvas>
   </div>
-</div>
+</div> -->
 
-<!-- モーダル -->
+<!-- モーダル
 <div id="modal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
@@ -61,4 +61,73 @@
   </div>
 </div>
 </body>
+</html> -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>🎸 Guitar Practice PWA</title>
+<link rel="stylesheet" href="styles.css">
+
+<!-- libraries -->
+<script src="https://unpkg.com/wavesurfer.js"></script>
+<script src="https://unpkg.com/meyda/dist/web/meyda.min.js"></script>
+<script src="https://unpkg.com/pitchfinder@1.3.2/dist/pitchfinder.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vexflow/releases/vexflow-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- main app -->
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="container">
+  <h1>🎸 Guitar Practice App</h1>
+
+  <div class="controls">
+    <button id="recordBtn">録音開始</button>
+    <button id="stopBtn">録音停止</button>
+    <button id="playBtn">再生</button>
+    <button id="slowBtn">スロー再生</button>
+    <button id="loopBtn">ループ切替</button>
+    <button id="earBtn">耳コピ解析 (コード)</button>
+    <button id="rhythmBtn">リズム解析 (BPM)</button>
+    <button id="scoreBtn">楽譜表示</button>
+    <button id="helpBtn">操作方法</button>
+    <input id="fileInput" type="file" accept="audio/*" style="margin-top:10px;"/>
+  </div>
+
+  <div id="waveform"></div>
+
+  <div id="analysis">
+    <h2>解析結果</h2>
+    <pre id="result">ここに表示されます</pre>
+  </div>
+
+  <div id="score"></div>
+
+  <div id="logChartContainer">
+    <canvas id="logChart"></canvas>
+  </div>
+</div>
+
+<!-- modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>操作方法</h2>
+    <ul>
+      <li>録音開始 / 録音停止：マイクで録音します</li>
+      <li>ファイル選択：mp3/m4a/wavなどのローカル音源を読み込みます</li>
+      <li>再生 / スロー再生：波形を再生します（スローは0.5x）</li>
+      <li>ループ切替：選択区間のループモードをオン/オフ（WaveSurferのregionを使う）</li>
+      <li>耳コピ解析：推定コード（ルート音）を表示します（簡易）</li>
+      <li>リズム解析：BPMを推定します（簡易）</li>
+      <li>楽譜表示：検出したピッチを簡易譜面に変換して表示します</li>
+    </ul>
+  </div>
+</div>
+
+</body>
 </html>
+
