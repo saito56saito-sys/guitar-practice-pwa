@@ -170,3 +170,74 @@ rhythm_analysis(y, sr)
   document.getElementById("result").textContent =
     "推定テンポ: " + tempo.toFixed(1) + " BPM";
 };
+// 楽譜表示
+document.getElementById("scoreBtn").onclick = async () => {
+  if(!pyodideReady || !audioBlob) return alert("音源をアップロードまたは録音してから楽譜表示してください");
+  const arrayBuffer = await audioBlob.arrayBuffer();
+  pyodide.globals.set("audio_bytes", new Uint8Array(arrayBuffer));
+  const freqs = await pyodide.runPythonAsync(`
+import io
+y, sr = librosa.load(io.BytesIO(bytes(audio_bytes)), sr=None)
+note_sequence(y, sr)
+`);
+  drawScore(freqs);
+  saveLog("楽譜表示", freqs.length + " ノート");
+};
+
+// VexFlowで簡易譜面描画
+function drawScore(freqs){
+  document.getElementById("score").innerHTML = "";
+  const VF = Vex.Flow;
+  const div = document.getElementById("score");
+  const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+  renderer.resize(500, 200);
+  const context = renderer.getContext();
+  const stave = new VF.Stave(10, 40, 480);
+  stave.addClef("treble").setContext(context).draw();
+  const notes = freqs.slice(0, 16).map(f=>{
+    return new VF.StaveNote({clef:"treble", keys:["c/4"], duration:"q"});
+  });
+  const voice = new VF.Voice({num_beats: 4, beat_value: 4});
+  voice.addTickables(notes);
+  new VF.Formatter().joinVoices([voice]).format([voice], 400);
+  voice.draw(context, stave);
+}
+
+// 練習ログ
+function saveLog(type, value){
+  const date = new Date().toLocaleString();
+  logData.push({date, type, value});
+  localStorage.setItem("guitar_log", JSON.stringify(logData));
+  drawLogChart();
+}
+
+function drawLogChart(){
+  const ctx = document.getElementById("logChart").getContext("2d");
+  const labels = logData.map(d=>d.date);
+  const data = logData.map(d=>d.value);
+  if(window.myChart) window.myChart.destroy();
+  window.myChart = new Chart(ctx, {
+    type: 'line',
+    data: {labels, datasets:[{label:'練習ログ', data, borderColor:'#ff6f61', fill:false}]},
+    options:{responsive:true, maintainAspectRatio:false}
+  });
+}
+
+// モーダル操作
+const modal = document.getElementById("modal");
+document.getElementById("helpBtn").onclick = () => modal.style.display = "block";
+document.querySelector(".close").onclick = () => modal.style.display = "none";
+window.onclick = e => { if(e.target == modal) modal.style.display = "none"; };
+
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+  .then(()=>console.log('Service Worker registered'))
+  .catch(err=>console.log('SW registration failed', err));
+}
+
+// 起動時に既存ログを読み込み
+if(localStorage.getItem("guitar_log")){
+  logData = JSON.parse(localStorage.getItem("guitar_log"));
+  drawLogChart();
+}
